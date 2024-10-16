@@ -103,10 +103,19 @@ do{
         switch(command) {
 
             case "principal":
+                        String principal = "";
+                try (Scanner in = new Scanner(new File("storedvariables/principal.txt"))) {
+                    while (in.hasNextLine()) {
+                        principal = in.nextLine();
+                    }
+                } catch (FileNotFoundException e) {
+                    System.err.println("File not found.");
+                }
             System.out.println("\n");
             try (PrintWriter out = new PrintWriter(new FileWriter("storedvariables/principal.txt"))) { //change here
                 Scanner in = new Scanner(System.in);
                 while (true) {
+                    System.out.println("Current stored variable is: " + principal);
                     System.out.print("Enter your input: ");
                     if (in.hasNextDouble()) {
                         savedInput = in.nextDouble();
