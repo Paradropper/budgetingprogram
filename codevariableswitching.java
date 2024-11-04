@@ -16,12 +16,26 @@ public class codevariableswitching {
         System.out.print("enter a command: ");
         command = commandsc.nextLine();
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (command.equals("varchange")) {
             Scanner in2 = new Scanner(System.in);
-
             System.out.print("Enter variable to define: ");
             String variable = in2.nextLine();
             String location = "storedvariables2/"+variable+".txt";
+
+            File file = new File(location);
+            if (file.exists()) {
+                // Notify the user that the file already exists
+                System.out.println("The file \"" + location + "\" already exists.");
+                System.out.print("Do you want to overwrite it? (yes/no): ");
+                String response = in2.nextLine();
+                if (!response.equalsIgnoreCase("yes")) {
+                    System.out.println("Operation canceled. No changes made.");
+                    return; // Exit if the user does not want to overwrite
+                } 
+            } else {
+                System.out.println("Creating new file...");
+            }
     
             try (PrintWriter out = new PrintWriter(new FileWriter(location))) { 
                 Scanner in = new Scanner(System.in);
@@ -41,7 +55,7 @@ public class codevariableswitching {
                 System.err.println("Error saving input to file.");
             }
         } else {
-            
+            //insert error here
         }
         
         }

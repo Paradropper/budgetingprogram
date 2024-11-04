@@ -89,127 +89,89 @@ System.out.println("");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     static void input () {
-
         
-        Scanner commands = new Scanner(System.in);
-        String command = "";
+        Scanner commandsc = new Scanner(System.in);
+
         double savedInput = 0;
-        System.out.println("");
-        System.out.println("Available variables are: \"principal\", \"income\", \"totalsavings\", \"totalexpenses\"");
-do{
-        System.out.print("enter the variable to redefine: ");
-        command = commands.nextLine(); 
-
-        switch(command) {
-
-            case "principal":
-                        String principal = "";
-                try (Scanner in = new Scanner(new File("storedvariables/principal.txt"))) {
-                    while (in.hasNextLine()) {
-                        principal = in.nextLine();
-                    }
-                } catch (FileNotFoundException e) {
-                    System.err.println("File not found.");
-                }
-            System.out.println("\n");
-            try (PrintWriter out = new PrintWriter(new FileWriter("storedvariables/principal.txt"))) { //change here
-                Scanner in = new Scanner(System.in);
-                while (true) {
-                    System.out.println("Current stored variable is: " + principal);
-                    System.out.print("Enter your input: ");
-                    if (in.hasNextDouble()) {
-                        savedInput = in.nextDouble();
-                        out.println(savedInput);
-                        System.out.println("Input saved to file, \"PHP " + String.format("%.2f",savedInput) + "\"");
-                        break; // exit the loop
-                    } else {
-                        System.out.println("Invalid input. Please enter a valid double.");
-                        in.next(); // discard the invalid input
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Error saving input to file.");
-            }
-            break;
-
-            case "income":
-            System.out.println("\n");
-            try (PrintWriter out = new PrintWriter(new FileWriter("storedvariables/income.txt"))) { 
-                Scanner in = new Scanner(System.in);
-                while (true) {
-                    System.out.print("Enter your input: ");
-                    if (in.hasNextDouble()) {
-                        savedInput = in.nextDouble();
-                        out.println(savedInput);
-                        System.out.println("Input saved to file, \"PHP " + String.format("%.2f",savedInput) + "\"");
-                        break; 
-                    } else {
-                        System.out.println("Invalid input. Please enter a valid double.");
-                        in.next(); 
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Error saving input to file.");
-            }
-            break;
-
-            case "totalsavings":
-            System.out.println("\n");
-            try (PrintWriter out = new PrintWriter(new FileWriter("storedvariables/totalsavings.txt"))) { 
-                Scanner in = new Scanner(System.in);
-                while (true) {
-                    System.out.print("Enter your input: ");
-                    if (in.hasNextDouble()) {
-                        savedInput = in.nextDouble();
-                        out.println(savedInput);
-                        System.out.println("Input saved to file, \"PHP " + String.format("%.2f",savedInput) + "\"");
-                        break; 
-                    } else {
-                        System.out.println("Invalid input. Please enter a valid double.");
-                        in.next(); 
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Error saving input to file.");
-            }
-            break;
-
-            case "totalexpenses":
-            System.out.println("\n");
-            try (PrintWriter out = new PrintWriter(new FileWriter("storedvariables/totalexpenses.txt"))) { 
-                Scanner in = new Scanner(System.in);
-                while (true) {
-                    System.out.print("Enter your input: ");
-                    if (in.hasNextDouble()) {
-                        savedInput = in.nextDouble();
-                        out.println(savedInput);
-                        System.out.println("Input saved to file, \"PHP " + String.format("%.2f",savedInput) + "\"");
-                        break; // exit the loop
-                    } else {
-                        System.out.println("Invalid input. Please enter a valid double.");
-                        in.next(); // discard the invalid input
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Error saving input to file.");
-            }
-            break;
-            
-        default:
-        System.out.println("\rInvalid input, please try again.");
-
-        case "return":
-            break;
+        String command = "";
 
         
-            
+
+        
+        
+    do {    
+        System.out.print("enter a command: ");
+        command = commandsc.nextLine();
+
+        if (command.equals("list")) { 
+            String directoryPath = "storedvariables";
+            File directory = new File(directoryPath);
+
+            if (directory.exists() && directory.isDirectory()) {
+                File[] files = directory.listFiles();
+                if (files != null && files.length > 0) {
+                    System.out.println("Defined variables in the \"" + directoryPath + "\" folder:");
+                    for (File file : files) {
+                        if (file.isFile() && file.getName().endsWith(".txt")) {
+                            // Extract the variable name by removing the .txt extension
+                            String variableName = file.getName().substring(0, file.getName().length() - 4);
+                            System.out.println(variableName);
+                        }
+                    }
+            } else {
+                System.out.println("No defined variables found in the \"" + directoryPath + "\" folder.");
+            }
+        } else {
+            System.out.println("Directory \"" + directoryPath + "\" does not exist.");
         }
+    } else if (command.equals("varchange")){
 
-        
-        } while  (!command.equals("return"));
+
+        Scanner in2 = new Scanner(System.in);
+        System.out.print("Enter variable to define: ");
+        String variable = in2.nextLine();
+        String location = "storedvariables/"+variable+".txt";
+
+            File file = new File(location);
+            if (file.exists()) {
+                // Notify the user that the file already exists
+                System.out.println("The file \"" + location + "\" already exists.");
+                System.out.print("Do you want to overwrite it? (yes/no): ");
+                String response = in2.nextLine();
+                if (!response.equalsIgnoreCase("yes")) {
+                    System.out.println("Operation canceled. No changes made.");
+                    return; // Exit if the user does not want to overwrite
+                } 
+            } else {
+                System.out.println("Creating new file...");
+            }
+    
+            try (PrintWriter out = new PrintWriter(new FileWriter(location))) { 
+                Scanner in = new Scanner(System.in);
+                while (true) {
+                    System.out.print("Enter your input: ");
+                    if (in.hasNextDouble()) {
+                        savedInput = in.nextDouble();
+                        out.println(savedInput);
+                        System.out.println("Input saved to file, \"PHP " + String.format("%.2f",savedInput) + "\"");
+                        break; 
+                    } else {
+                        System.out.println("Invalid input. Please enter a valid double.");
+                        in.next(); 
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Error saving input to file.");
+            }
+    } else if (command.equals("return")) {
+        System.out.println("returning");
+    } else{
+        System.err.println("unknown command.");
+    }
+} while (!command.equals("return"));
         
         return;
-
+        }
    
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,6 +192,6 @@ do{
 
 
 //end
-}
+
 
     
