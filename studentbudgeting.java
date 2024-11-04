@@ -165,8 +165,19 @@ System.out.println("");
             }
     } else if (command.equals("return")) {
         System.out.println("returning");
-    } else{
-        System.err.println("unknown command.");
+    } else if (command.equals("delete")) {
+        System.out.println("variable to delete: ");
+        Scanner in = new Scanner(System.in);
+        String variable = in.nextLine();
+        String filelocation = "storedvariables/"+variable+".txt";
+        File file = new File(filelocation);
+        if (file.delete()) {
+            System.out.println("File deleted successfully.");
+        } else {
+            System.err.println("Failed to delete the file.");
+        }
+    } else {
+        System.out.println("unknown command.");
     }
 } while (!command.equals("return"));
         
